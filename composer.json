@@ -7,8 +7,6 @@
       "homepage": "https://github.com/cogentParadigm"
     }
   ],
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "require": {
     "behat/behat": "*",
     "behat/mink": "*",
@@ -16,6 +14,9 @@
     "behat/mink-goutte-driver": "*",
     "behat/mink-selenium2-driver": "*",
     "fzaninotto/faker": "*"
+  },
+  "require-dev": {
+    "starbug/standard": "^1.0"
   },
   "autoload": {
     "psr-4": {
