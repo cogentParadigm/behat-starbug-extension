@@ -96,4 +96,13 @@ class StarbugContext extends RawStarbugContext {
       $this->assertError($value, $field);
     }
   }
+
+  /**
+   * Check for a declarative dojo widget.
+   *
+   * @Then I should see a/an :type widget
+   */
+  public function assertWidgetOnPage($type) {
+    $this->mink->assertElementOnPage("[data-dojo-type=\"".$type."\"]");
+  }
 }
