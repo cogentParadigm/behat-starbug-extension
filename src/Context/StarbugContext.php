@@ -2,6 +2,7 @@
 namespace Starbug\Behat\Context;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\DbUnit\DataSet\CompositeDataSet;
 
 /**
  * Provides pre-built step definitions for interacting with Starbug.
@@ -27,7 +28,7 @@ class StarbugContext extends RawStarbugContext {
    *
    * @When I login as a/an :role
    */
-  public function loginAs($group) {
+  public function loginRole($group) {
     $user = [
       "first_name" => $this->faker->firstName,
       "last_name" => $this->faker->lastName,
@@ -44,7 +45,7 @@ class StarbugContext extends RawStarbugContext {
    * | first_name | Malcom |
    * | last_name | Shabazz |
    *
-   * @Given I am logged in as:
+   * @Given I am logged in with:
    */
   public function loginWith(TableNode $fields) {
     $user = [
@@ -62,7 +63,21 @@ class StarbugContext extends RawStarbugContext {
     $this->login($user);
   }
 
-
+  /**
+   * Creates and authenticates a user with the given fields.
+   * | first_name | Malcom |
+   * | last_name | Shabazz |
+   *
+   * @Given I am logged in as:
+   */
+  public function loginAs(TableNode $fields) {
+    $user = $this->models->get("users")->query()->conditions($fields->getRowsHash())->one();
+    $password = $this->faker->password;
+    if (!empty($user)) {
+      $this->models->get("users")->store(["id" => $user["id"], "password" => $password]);
+    }
+    $this->login(["email" => $user["email"], "password" => $user["password"]]);
+  }
 
   /**
    * Check for a data grid on the page.
@@ -104,5 +119,37 @@ class StarbugContext extends RawStarbugContext {
    */
   public function assertWidgetOnPage($type) {
     $this->mink->assertElementOnPage("[data-dojo-type=\"".$type."\"]");
+  }
+
+  /**
+   * Creates an entity with specified fields
+   *
+   * @Given there is a/an :entity entity with:
+   */
+  public function createEntity($entity, TableNode $fields) {
+    $this->models->get($entity)->store($fields->getRowsHash());
+  }
+
+  /**
+   * Populates a fixture into the database.
+   *
+   * @Given I have the fixture :fixture
+   */
+  public function applyFixture($fixture) {
+    $this->fixtures->applyDataSet($this->fixtures->createMySQLXMLDataSet($fixture));
+  }
+
+  /**
+   * Populates a fixture into the database.
+   *
+   * @Given I have the fixtures:
+   */
+  public function applyFixtures(TableNode $fixtures) {
+    $fixtures = $fixtures->getColumn(0);
+    $dataSet = new CompositeDataSet();
+    foreach ($fixtures as $fixture) {
+      $dataSet->addDataSet($this->fixtures->createMySQLXMLDataSet($fixture));
+    }
+    $this->fixtures->applyDataSet($dataSet);
   }
 }

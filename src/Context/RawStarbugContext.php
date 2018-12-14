@@ -6,6 +6,8 @@ use Interop\Container\ContainerInterface;
 use Faker\Factory;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use PDO;
+use Starbug\Behat\Fixture\Applicator as FixtureApplicator;
 
 class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
   public function __construct() {
@@ -20,6 +22,11 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
   public function setStarbugContainer(ContainerInterface $container) {
     $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
     $this->macro = $container->get("Starbug\Core\MacroInterface");
+    $config = $container->get("Starbug\Core\ConfigInterface");
+    $database = $container->get("database_name");
+    $params = $config->get("db/".$database);
+    $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+    $this->fixtures = new FixtureApplicator($pdo);
   }
   public function action($model, $action, $data = []) {
     $this->models->get($model)->$action($data);
