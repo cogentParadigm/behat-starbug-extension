@@ -15,7 +15,7 @@
     "behat/mink-selenium2-driver": "*",
     "fzaninotto/faker": "*",
     "ingenerator/behat-tableassert": "*",
-    "tpayne/behat-mail-extension": "dev-master"
+    "alexandresalome/mailcatcher": "*"
   },
   "require-dev": {
     "starbug/standard": "^1.0"

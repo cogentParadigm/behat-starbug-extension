@@ -1,21 +1,26 @@
 <?php
 namespace Starbug\Behat\Context;
 
-use tPayne\BehatMailExtension\Context\MailAwareContext;
-use tPayne\BehatMailExtension\Context\MailTrait;
-use PHPUnit\Framework\Assert;
+use Alex\MailCatcher\Behat\MailCatcherContext;
+use Alex\MailCatcher\Message;
+use Exception;
 
-class MailContext implements MailAwareContext {
-  use MailTrait;
+class MailContext extends MailCatcherContext {
 
   /**
    * Check for email.
    *
    * @Then :subject should be emailed to :address
+   *
+   * @throws Exception When no matching message is found.
    */
   public function assertEmail($subject, $address) {
-    $message = array_pop($this->mail->getMessages());
-    Assert::assertEquals($subject, $message->subject());
-    Assert::assertEquals($address, $message->to());
+    $message = $this->getMailCatcherClient()->searchOne([
+      Message::SUBJECT_CRITERIA => $subject,
+      Message::TO_CRITERIA => $address
+    ]);
+    if (is_null($message)) {
+      throw new Exception("Message not found.");
+    }
   }
 }
