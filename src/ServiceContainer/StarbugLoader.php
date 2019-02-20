@@ -13,9 +13,9 @@ class StarbugLoader {
     $factory = new ContainerFactory($this->basePath);
     $container = $factory->build([]);
     date_default_timezone_set($container->get('time_zone'));
-    $url = $container->make("Starbug\Core\URL", ['base_directory' => $container->get("website_url")]);
-    $request = $container->make("Starbug\Core\Request", ['url' => $url]);
-    $container->set("Starbug\Core\RequestInterface", $request);
+    $url = $container->make("Starbug\Http\Url", ['base_directory' => $container->get("website_url")]);
+    $request = $container->make("Starbug\Http\Request", ['url' => $url]);
+    $container->set("Starbug\Http\RequestInterface", $request);
     return $container;
   }
 }
