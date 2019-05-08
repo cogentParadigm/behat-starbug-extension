@@ -3,6 +3,7 @@ namespace Starbug\Behat\Context;
 
 use Behat\MinkExtension\Context\MinkContext as ParentContext;
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 
 /**
  * Extensions to the Mink Extension.
