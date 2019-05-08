@@ -3,6 +3,7 @@ namespace Starbug\Behat\Context;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\DbUnit\DataSet\CompositeDataSet;
+use PHPUnit\Framework\Assert;
 
 /**
  * Provides pre-built step definitions for interacting with Starbug.
@@ -80,15 +81,8 @@ class StarbugContext extends RawStarbugContext {
   }
 
   /**
-   * Check for a data grid on the page.
+   * Assert the presence of a form error.
    *
-   * @Then I should see a :arg1 grid
-   */
-  public function assertGrid($arg1) {
-    $this->mink->assertElementOnPage("table#".$arg1."_grid");
-  }
-
-  /**
    * @Then I should see the error :arg1 for :arg2
    */
   public function assertError($arg1, $arg2) {
@@ -96,7 +90,7 @@ class StarbugContext extends RawStarbugContext {
   }
 
   /**
-   * Assert pressence of multiple form errors
+   * Assert presence of multiple form errors.
    * Example: Then I should see the following errors:"
    *              | username | bruceWayne |
    *              | password | iLoveBats123 |
@@ -113,21 +107,34 @@ class StarbugContext extends RawStarbugContext {
   }
 
   /**
-   * Check for a declarative dojo widget.
-   *
-   * @Then I should see a/an :type widget
-   */
-  public function assertWidgetOnPage($type) {
-    $this->mink->assertElementOnPage("[data-dojo-type=\"".$type."\"]");
-  }
-
-  /**
    * Creates an entity with specified fields
    *
+   * @Given there is a/an :entity record with:
    * @Given there is a/an :entity entity with:
    */
   public function createEntity($entity, TableNode $fields) {
     $this->models->get($entity)->store($fields->getRowsHash());
+  }
+
+  /**
+   * Assert record exists in database.
+   *
+   * @Then there should be a/an :entity record with:
+   * @Then there should be a/an :entity entity with:
+   */
+  public function assertRecordExists($entity, TableNode $expected) {
+    $record = $this->models->get($entity)->query()->conditions($expected->getRowsHash())->one();
+    Assert::assertNotEmpty($record);
+  }
+
+  /**
+   * Assert a logged error message containing a specified value
+   *
+   * @Then there should be a/an :entity record with a/an :field containing :value
+   */
+  public function assertFieldValueContains($entity, $field, $value) {
+    $record = $this->models->get($entity)->query()->where($field . " LIKE \"%" . $value . "%\"")->one();
+    Assert::assertNotEmpty($record);
   }
 
   /**

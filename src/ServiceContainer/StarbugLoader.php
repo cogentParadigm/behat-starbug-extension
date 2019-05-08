@@ -2,10 +2,13 @@
 namespace Starbug\Behat\ServiceContainer;
 
 use Starbug\Core\ContainerFactory;
+use Starbug\Http\Url;
 
 class StarbugLoader {
-  private $basePath;
-  public function __construct($basePath) {
+  protected $baseUrl;
+  protected $basePath;
+  public function __construct($baseUrl, $basePath = "/") {
+    $this->baseUrl = $baseUrl;
     $this->basePath = $basePath;
   }
   public function boot() {
@@ -13,7 +16,9 @@ class StarbugLoader {
     $factory = new ContainerFactory($this->basePath);
     $container = $factory->build([]);
     date_default_timezone_set($container->get('time_zone'));
-    $url = $container->make("Starbug\Http\Url", ['base_directory' => $container->get("website_url")]);
+    $components = parse_url($this->baseUrl);
+    $url = new Url($components["host"], $container->get("website_url"));
+    $url->setScheme($components["scheme"]);
     $request = $container->make("Starbug\Http\Request", ['url' => $url]);
     $container->set("Starbug\Http\RequestInterface", $request);
     return $container;

@@ -37,7 +37,7 @@ class StarbugExtension implements ExtensionInterface {
   }
 
   private function loadStarbug(ContainerBuilder $container, array $config) {
-    $loader = new StarbugLoader($container->getParameter("paths.base"));
+    $loader = new StarbugLoader($container->getParameter("mink.base_url"), $container->getParameter("paths.base"));
     $container->set("starbug.container", $starbug = $loader->boot());
     return $starbug;
   }
