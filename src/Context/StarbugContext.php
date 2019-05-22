@@ -70,6 +70,7 @@ class StarbugContext extends RawStarbugContext {
    * | last_name | Shabazz |
    *
    * @Given I am logged in as:
+   * @When I login as:
    */
   public function loginAs(TableNode $fields) {
     $user = $this->models->get("users")->query()->conditions($fields->getRowsHash())->one();
@@ -77,7 +78,7 @@ class StarbugContext extends RawStarbugContext {
     if (!empty($user)) {
       $this->models->get("users")->store(["id" => $user["id"], "password" => $password]);
     }
-    $this->login(["email" => $user["email"], "password" => $user["password"]]);
+    $this->login(["email" => $user["email"], "password" => $password]);
   }
 
   /**
