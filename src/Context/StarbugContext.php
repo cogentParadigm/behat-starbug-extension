@@ -108,6 +108,46 @@ class StarbugContext extends RawStarbugContext {
   }
 
   /**
+   * Wait for a dialog to open.
+   *
+   * @When a dialog is opened
+   */
+  public function waitForDialog() {
+    $this->getSession()->wait(30000, "(function() {var elem = document.querySelector(\"div.in[role=dialog] form\"); return elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); })()");
+    $dialogs = $this->getContext()->findAll("css", "[role=dialog]");
+    foreach ($dialogs as $dialog) {
+      if ($dialog->hasClass("in")) {
+        $this->context = $dialog;
+      }
+    }
+  }
+
+  /**
+   * Assert dialog has closed.
+   *
+   * @Then the dialog will close
+   */
+  public function assertDialogClosed() {
+    $this->getContext()->waitFor(30, function ($node) {
+      return !$node->isVisible();
+    });
+    Assert::assertFalse($this->context->isVisible());
+    $this->context = null;
+  }
+
+  /**
+   * Wait for dialog reload.
+   *
+   * @Then the dialog will reload
+   */
+  public function assertDialogReloaded() {
+    $this->getContext()->waitFor(30, function ($node) {
+      return ($node->find("css", "form.submitted") || $node->find("css", "form.errors"));
+    });
+    Assert::assertTrue(($this->getContext()->find("css", "form.submitted") || $this->getContext()->find("css", "form.errors")));
+  }
+
+  /**
    * Creates an entity with specified fields
    *
    * @Given there is a/an :entity record with:

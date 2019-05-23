@@ -79,39 +79,6 @@ class MinkContext extends ParentContext {
   }
 
   /**
-   * Wait for a dialog to open.
-   *
-   * @When a dialog is opened
-   */
-  public function waitForDialog() {
-    $this->getSession()->wait(5000, "function() {var elem = document.querySelector(\"[role=dialog]\"); return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); }");
-    $this->context = $this->getContext()->find("css", "[role=dialog]");
-  }
-
-  /**
-   * Assert dialog has closed.
-   *
-   * @Then the dialog will close
-   */
-  public function assertDialogClosed() {
-    $this->getSession()->wait(5000, "function() {var elem = document.querySelector(\"[role=dialog]\"); return !( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); }");
-    Assert::assertFalse($this->context->isVisible());
-    $this->context = null;
-  }
-
-  /**
-   * Wait for dialog reload.
-   *
-   * @Then the dialog will reload
-   */
-  public function assertDialogReloaded() {
-    $this->getContext()->waitFor(5, function ($node) {
-      return ($node->find("css", "form.submitted") || $node->find("css", "form.errors"));
-    });
-    Assert::assertTrue(($this->getContext()->find("css", "form.submitted") || $this->getContext()->find("css", "form.errors")));
-  }
-
-  /**
    * Set a context for element traversal.
    *
    * @When I focus on :element
