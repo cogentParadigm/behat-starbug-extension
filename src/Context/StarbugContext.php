@@ -114,10 +114,10 @@ class StarbugContext extends RawStarbugContext {
    */
   public function waitForDialog() {
     $this->getSession()->wait(30000, "(function() {var elem = document.querySelector(\"div.in[role=dialog] form\"); return elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); })()");
-    $dialogs = $this->getContext()->findAll("css", "[role=dialog]");
+    $dialogs = $this->mink->getContext()->findAll("css", "[role=dialog]");
     foreach ($dialogs as $dialog) {
       if ($dialog->hasClass("in")) {
-        $this->context = $dialog;
+        $this->mink->setContext($dialog);
       }
     }
   }
@@ -128,11 +128,11 @@ class StarbugContext extends RawStarbugContext {
    * @Then the dialog will close
    */
   public function assertDialogClosed() {
-    $this->getContext()->waitFor(30, function ($node) {
+    $this->mink->getContext()->waitFor(30, function ($node) {
       return !$node->isVisible();
     });
-    Assert::assertFalse($this->context->isVisible());
-    $this->context = null;
+    Assert::assertFalse($this->mink->getContext()->isVisible());
+    $this->mink->setContext(null);
   }
 
   /**
@@ -141,10 +141,10 @@ class StarbugContext extends RawStarbugContext {
    * @Then the dialog will reload
    */
   public function assertDialogReloaded() {
-    $this->getContext()->waitFor(30, function ($node) {
+    $this->mink->getContext()->waitFor(30, function ($node) {
       return ($node->find("css", "form.submitted") || $node->find("css", "form.errors"));
     });
-    Assert::assertTrue(($this->getContext()->find("css", "form.submitted") || $this->getContext()->find("css", "form.errors")));
+    Assert::assertTrue(($this->mink->getContext()->find("css", "form.submitted") || $this->mink->getContext()->find("css", "form.errors")));
   }
 
   /**

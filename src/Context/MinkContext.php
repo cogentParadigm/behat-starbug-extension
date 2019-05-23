@@ -3,7 +3,7 @@ namespace Starbug\Behat\Context;
 
 use Behat\MinkExtension\Context\MinkContext as ParentContext;
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
+use Behat\Mink\Element\NodeElement;
 
 /**
  * Extensions to the Mink Extension.
@@ -79,12 +79,14 @@ class MinkContext extends ParentContext {
   }
 
   /**
-   * Set a context for element traversal.
+   * Set context for element traversal.
    *
-   * @When I focus on :element
+   * @param NodeElement|null $context The new context.
+   *
+   * @return void
    */
-  public function setContext($locator, $type = "named") {
-    $this->context = $this->getSession()->getPage()->find($type, $locator);
+  public function setContext(?NodeElement $context) {
+    $this->context = $context;
   }
 
   /**
