@@ -9,6 +9,8 @@ use Behat\Mink\Element\NodeElement;
  * Extensions to the Mink Extension.
  */
 class MinkContext extends ParentContext {
+  protected $context = false;
+  protected $contextHistory = [];
   /**
    * Clicks link with specified id|title|alt|text
    * Example: And I click "Log In"
@@ -86,7 +88,17 @@ class MinkContext extends ParentContext {
    * @return void
    */
   public function setContext(?NodeElement $context) {
-    $this->context = $context;
+    $this->contextHistory[] = $this->context = $context;
+  }
+
+  /**
+   * Exits the current context and returns to the previous one.
+   *
+   * @return void
+   */
+  public function popContext() {
+    array_pop($this->contextHistory);
+    $this->context = end($this->contextHistory);
   }
 
   /**

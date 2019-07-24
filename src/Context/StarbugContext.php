@@ -114,7 +114,7 @@ class StarbugContext extends RawStarbugContext {
    */
   public function waitForDialog() {
     $this->getSession()->wait(30000, "(function() {var elem = document.querySelector(\"div.in[role=dialog] form\"); return elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); })()");
-    $dialogs = $this->mink->getContext()->findAll("css", "[role=dialog]");
+    $dialogs = $this->getSession()->getPage()->findAll("css", "[role=dialog]");
     foreach ($dialogs as $dialog) {
       if ($dialog->hasClass("in")) {
         $this->mink->setContext($dialog);
@@ -132,7 +132,7 @@ class StarbugContext extends RawStarbugContext {
       return !$node->isVisible();
     });
     Assert::assertFalse($this->mink->getContext()->isVisible());
-    $this->mink->setContext(null);
+    $this->mink->popContext();
   }
 
   /**
