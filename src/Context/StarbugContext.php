@@ -110,7 +110,10 @@ class StarbugContext extends RawStarbugContext {
   /**
    * Wait for a dialog to open.
    *
+   * @Given a dialog is open
    * @When a dialog is opened
+   * @When a dialog opens
+   * @Then a dialog will open
    */
   public function waitForDialog() {
     $this->getSession()->wait(30000, "(function() {var elem = document.querySelector(\"div.in[role=dialog] form\"); return elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); })()");
@@ -125,6 +128,8 @@ class StarbugContext extends RawStarbugContext {
   /**
    * Assert dialog has closed.
    *
+   * @Given the dialog is closed
+   * @When the dialog closes
    * @Then the dialog will close
    */
   public function assertDialogClosed() {
@@ -138,6 +143,9 @@ class StarbugContext extends RawStarbugContext {
   /**
    * Wait for dialog reload.
    *
+   * @Given the dialog has reloaded
+   * @When the dialog is reloaded
+   * @When the dialog reloads
    * @Then the dialog will reload
    */
   public function assertDialogReloaded() {
