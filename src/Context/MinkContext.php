@@ -107,6 +107,6 @@ class MinkContext extends ParentContext {
    * @return Behat\Mink\Element\NodeElement The node or document.
    */
   public function getContext() {
-    return is_null($this->context) ? $this->getSession()->getPage() : $this->context;
+    return (false == $this->context) ? $this->getSession()->getPage() : $this->context;
   }
 }
