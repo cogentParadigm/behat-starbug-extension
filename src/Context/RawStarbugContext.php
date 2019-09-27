@@ -52,7 +52,7 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
           $last[$name] = $value;
         } elseif ($type == "last") {
           $replacements[$token] = $last[$name];
-        } elseif ($type = "date") {
+        } elseif ($type == "date") {
           $replacements[$token] = date($name);
         }
       }
