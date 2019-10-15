@@ -2,15 +2,20 @@
 namespace Starbug\Behat\Context;
 
 use Behat\MinkExtension\Context\MinkContext as ParentContext;
+use Interop\Container\ContainerInterface;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 
 /**
  * Extensions to the Mink Extension.
  */
-class MinkContext extends ParentContext {
+class MinkContext extends ParentContext implements StarbugAwareContext {
   protected $context = false;
   protected $contextHistory = [];
+
+  public function setStarbugContainer(ContainerInterface $container) {
+    $this->setMinkParameter("files_path", $container->get("base_directory"));
+  }
   /**
    * Clicks link with specified id|title|alt|text
    * Example: And I click "Log In"
