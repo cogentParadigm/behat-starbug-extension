@@ -54,6 +54,8 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
           $replacements[$token] = $last[$name];
         } elseif ($type == "date") {
           $replacements[$token] = date($name);
+        } elseif ($type == "mink") {
+          $replacements[$token] = $this->getMinkParameter($name);
         }
       }
     }
