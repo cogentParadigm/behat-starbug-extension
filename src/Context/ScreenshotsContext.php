@@ -16,6 +16,7 @@ class ScreenshotsContext extends RawStarbugContext {
    * @AfterStep
    */
   public function stepScreenshot(AfterStepScope $scope) {
+    if ($scope->getTestResult()->isPassed()) return;
     $driver = $this->getMink()->getSession()->getDriver();
     if (!($driver instanceof ChromeDriver)) {
       return;
