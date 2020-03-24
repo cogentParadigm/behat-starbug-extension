@@ -23,10 +23,15 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
     $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
     $this->macro = $container->get("Starbug\Core\MacroInterface");
     $config = $container->get("Starbug\Core\ConfigInterface");
-    $database = $container->get("database_name");
-    $params = $config->get("db/".$database);
-    $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-    $this->fixtures = new FixtureApplicator($pdo);
+    if (!$container->has("behat.fixture_applicator")) {
+      $database = $container->get("database_name");
+      $params = $config->get("db/".$database);
+      $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+      $fixtures = new FixtureApplicator($pdo);
+      $container->set("behat.fixture_applicator", $fixtures);
+      $container->set("Starbug\Behat\Fixture\Applicator", $fixtures);
+    }
+    $this->fixtures = $container->get("behat.fixture_applicator");
   }
   public function action($model, $action, $data = []) {
     $this->models->get($model)->$action($data);
