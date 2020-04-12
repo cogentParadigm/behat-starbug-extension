@@ -2,7 +2,7 @@
 namespace Starbug\Behat\Context;
 
 use Behat\Behat\Context\Context;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 interface StarbugAwareContext extends Context {
   public function setStarbugContainer(ContainerInterface $container);

@@ -2,7 +2,7 @@
 namespace Starbug\Behat\Context;
 
 use Behat\MinkExtension\Context\MinkContext as ParentContext;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 

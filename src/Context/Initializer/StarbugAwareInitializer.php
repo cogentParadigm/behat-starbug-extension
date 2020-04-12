@@ -4,7 +4,7 @@ namespace Starbug\Behat\Context\Initializer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Starbug\Behat\Context\StarbugAwareContext;
 
 /**

@@ -2,7 +2,7 @@
 namespace Starbug\Behat\Context;
 
 use Behat\MinkExtension\Context\RawMinkContext;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Faker\Factory;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
