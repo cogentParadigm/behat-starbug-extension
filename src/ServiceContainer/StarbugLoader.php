@@ -14,23 +14,27 @@ class StarbugLoader {
     $this->basePath = $basePath;
   }
   public function boot() {
-    error_reporting(E_ALL & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
-    $factory = new ContainerFactory($this->basePath);
-    $container = $factory->build([]);
-    date_default_timezone_set($container->get('time_zone'));
-    $components = parse_url($this->baseUrl);
-    if (class_exists("Starbug\Http\Url")) {
-      $url = new HttpUrl($components["host"], $container->get("website_url"));
-      $url->setScheme($components["scheme"]);
-      $request = $container->make("Starbug\Http\Request", ['url' => $url]);
-      $container->set("Starbug\Http\RequestInterface", $request);
-    } else if (class_exists("Starbug\Core\URL")) {
-      $url = new CoreUrl($components["host"], $container->get("website_url"));
-      $url->setScheme($components["scheme"]);
-      $request = $container->make("Starbug\Core\Request", ['url' => $url]);
-      $container->set("Starbug\Core\RequestInterface", $request);
-    } else {
-      throw new Exception("Unable to bootstrap Starbug. Cannot find suitable UrlInterface.");
+    if (file_exists("vendor/starbug/di/bootstrap/default.php")) {
+      include("vendor/starbug/di/bootstrap/default.php");
+    } elseif (class_exists("Starbug\Core\ContainerFactory")) {
+      error_reporting(E_ALL & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
+      $factory = new ContainerFactory($this->basePath);
+      $container = $factory->build([]);
+      date_default_timezone_set($container->get('time_zone'));
+      $components = parse_url($this->baseUrl);
+      if (class_exists("Starbug\Http\Url")) {
+        $url = new HttpUrl($components["host"], $container->get("website_url"));
+        $url->setScheme($components["scheme"]);
+        $request = $container->make("Starbug\Http\Request", ['url' => $url]);
+        $container->set("Starbug\Http\RequestInterface", $request);
+      } elseif (class_exists("Starbug\Core\URL")) {
+        $url = new CoreUrl($components["host"], $container->get("website_url"));
+        $url->setScheme($components["scheme"]);
+        $request = $container->make("Starbug\Core\Request", ['url' => $url]);
+        $container->set("Starbug\Core\RequestInterface", $request);
+      } else {
+        throw new Exception("Unable to bootstrap Starbug. Cannot find suitable UrlInterface.");
+      }
     }
     return $container;
   }
