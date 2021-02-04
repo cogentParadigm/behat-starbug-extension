@@ -8,17 +8,19 @@ use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\ArrayDataSet;
 use PHPUnit\DbUnit\DataSet\FlatXmlDataSet;
 use PHPUnit\DbUnit\DataSet\IDataSet;
-use PHPUnit\DbUnit\DataSet\MysqlXmlDataSet;
 use PHPUnit\DbUnit\DataSet\XmlDataSet;
+use Starbug\Behat\DbUnit\DataSet\PrefixedMysqlXmlDataSet;
 
 class Applicator {
 
   protected $conn = null;
   protected $pdo = null;
   protected $operation = null;
+  protected $tablePrefix;
 
-  public function __construct(PDO $pdo) {
+  public function __construct(PDO $pdo, $prefix = "") {
     $this->pdo = $pdo;
+    $this->tablePrefix = $prefix;
   }
 
   /**
@@ -92,13 +94,13 @@ class Applicator {
   }
 
   /**
-   * Create a a new MysqlXmlDataSet with the given $xmlFile. (absolute path.)
+   * Create a a new PrefixedMysqlXmlDataSet with the given $xmlFile. (absolute path.)
    *
    * @param string $xmlFile
    *
-   * @return MysqlXmlDataSet
+   * @return PrefixedMysqlXmlDataSet
    */
   public function createMySQLXMLDataSet($xmlFile) {
-    return new MysqlXmlDataSet($xmlFile);
+    return new PrefixedMysqlXmlDataSet($xmlFile, $this->tablePrefix);
   }
 }

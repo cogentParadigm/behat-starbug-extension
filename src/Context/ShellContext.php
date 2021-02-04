@@ -29,4 +29,16 @@ class ShellContext implements Context {
         throw new Exception(sprintf('Did not see "%s" in output "%s"', $string, $this->output));
     }
   }
+  /**
+   * Validate command output by regex.
+   *
+   * @Then the output should match the pattern :pattern
+   *
+   * @throws Exception if output does not match pattern.
+   */
+  public function outputShouldMatchPattern($pattern) {
+    if (preg_match($pattern, $this->output) === false) {
+        throw new Exception(sprintf('Did not see "%s" in output "%s"', $pattern, $this->output));
+    }
+  }
 }

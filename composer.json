@@ -8,18 +8,19 @@
     }
   ],
   "require": {
-    "behat/behat": "*",
+    "behat/behat": "^3.0",
     "behat/mink": "*",
     "behat/mink-extension": "*",
     "behat/mink-goutte-driver": "*",
     "behat/mink-selenium2-driver": "*",
     "dmore/behat-chrome-extension": "*",
-    "fzaninotto/faker": "*",
+    "fzaninotto/faker": "^1.0",
     "ingenerator/behat-tableassert": "*",
     "alexandresalome/mailcatcher": "*"
   },
   "require-dev": {
-    "starbug/standard": "^1.0"
+    "starbug/standard": "^1.0",
+    "phpunit/dbunit": "^4.0"
   },
   "autoload": {
     "psr-4": {
