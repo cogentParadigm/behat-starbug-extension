@@ -13,8 +13,8 @@ class PrefixedMysqlXmlDataSet extends MysqlXmlDataSet {
   protected $tablePrefix;
 
   public function __construct($xmlFile, $prefix = "") {
-    parent::__construct($xmlFile);
     $this->tablePrefix = $prefix;
+    parent::__construct($xmlFile);
   }
   protected function getTableInfo(array &$tableColumns, array &$tableValues): void {
     if ($this->xmlFileContents->getName() != 'mysqldump') {
