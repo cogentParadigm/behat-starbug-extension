@@ -24,8 +24,12 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
     $this->macro = $container->get("Starbug\Core\MacroInterface");
     $config = $container->get("Starbug\Core\ConfigInterface");
     if (!$container->has("behat.fixture_applicator")) {
-      $database = $container->has("database_name") ? $container->get("database_name") : $container->get("db");
-      $params = $config->get("db/".$database);
+      if ($container->has("databases.active")) {
+        $params = $container->get("databases.active");
+      } else {
+        $database = $container->has("database_name") ? $container->get("database_name") : $container->get("db");
+        $params = $config->get("db/".$database);
+      }
       $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
       $fixtures = new FixtureApplicator($pdo, $params["prefix"]);
       $container->set("behat.fixture_applicator", $fixtures);
