@@ -118,10 +118,14 @@ class StarbugContext extends RawStarbugContext {
   public function waitForDialog() {
     $this->getSession()->wait(30000, "(function() {var elem = document.querySelector(\"div.in[role=dialog] form\"); return elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); })()");
     $dialogs = $this->getSession()->getPage()->findAll("css", "[role=dialog]");
+    $target = false;
     foreach ($dialogs as $dialog) {
       if ($dialog->hasClass("in")) {
-        $this->mink->setContext($dialog);
+        $target = $dialog;
       }
+    }
+    if ($target) {
+      $this->mink->setContext($target);
     }
   }
 
