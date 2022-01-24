@@ -2,12 +2,12 @@
 namespace Starbug\Behat\ServiceContainer;
 
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
+use Behat\MinkExtension\ServiceContainer\MinkExtension;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Psr\Container\ContainerInterface;
 
 class StarbugExtension implements ExtensionInterface {
@@ -30,6 +30,7 @@ class StarbugExtension implements ExtensionInterface {
     $starbug = $this->loadStarbug($container, $config);
     $this->loadClassGenerator($container);
     $this->loadContextInitializer($container, $starbug);
+    $container->setDefinition(MinkExtension::SELECTORS_HANDLER_ID, new Definition("Starbug\Behat\Selector\SelectorsHandler"));
   }
 
   public function process(ContainerBuilder $container) {
