@@ -23,14 +23,18 @@ class StarbugExtension implements ExtensionInterface {
   }
 
   public function configure(ArrayNodeDefinition $builder) {
-    // Nothing to do.
+    $builder->children()
+      ->scalarNode("selectors_handler")->defaultNull()->end()
+    ->end();
   }
 
   public function load(ContainerBuilder $container, array $config) {
     $starbug = $this->loadStarbug($container, $config);
     $this->loadClassGenerator($container);
     $this->loadContextInitializer($container, $starbug);
-    $container->setDefinition(MinkExtension::SELECTORS_HANDLER_ID, new Definition("Starbug\Behat\Selector\SelectorsHandler"));
+    if (!empty($config["selectors_handler"])) {
+      $container->setDefinition(MinkExtension::SELECTORS_HANDLER_ID, new Definition($config["selectors_handler"]));
+    }
   }
 
   public function process(ContainerBuilder $container) {
