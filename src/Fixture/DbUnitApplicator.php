@@ -11,7 +11,7 @@ use PHPUnit\DbUnit\DataSet\IDataSet;
 use PHPUnit\DbUnit\DataSet\XmlDataSet;
 use Starbug\Behat\DbUnit\DataSet\PrefixedMysqlXmlDataSet;
 
-class Applicator {
+class DbUnitApplicator {
 
   protected $conn = null;
   protected $pdo = null;

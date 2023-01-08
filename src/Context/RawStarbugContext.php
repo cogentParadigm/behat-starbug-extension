@@ -6,8 +6,7 @@ use Psr\Container\ContainerInterface;
 use Faker\Factory;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use PDO;
-use Starbug\Behat\Fixture\Applicator as FixtureApplicator;
+use Starbug\Core\DatabaseInterface;
 
 class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
   public function __construct() {
@@ -20,25 +19,8 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
     $this->mink->pressButton("Login");
   }
   public function setStarbugContainer(ContainerInterface $container) {
-    $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
+    $this->db = $container->get(DatabaseInterface::class);
     $this->macro = $container->get("Starbug\Core\MacroInterface");
-    $config = $container->get("Starbug\Core\ConfigInterface");
-    if (!$container->has("behat.fixture_applicator")) {
-      if ($container->has("databases.active")) {
-        $params = $container->get("databases.active");
-      } else {
-        $database = $container->has("database_name") ? $container->get("database_name") : $container->get("db");
-        $params = $config->get("db/".$database);
-      }
-      $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-      $fixtures = new FixtureApplicator($pdo, $params["prefix"]);
-      $container->set("behat.fixture_applicator", $fixtures);
-      $container->set("Starbug\Behat\Fixture\Applicator", $fixtures);
-    }
-    $this->fixtures = $container->get("behat.fixture_applicator");
-  }
-  public function action($model, $action, $data = []) {
-    $this->models->get($model)->$action($data);
   }
   /**
    * Replace fake data tokens.
