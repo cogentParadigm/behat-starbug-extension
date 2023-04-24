@@ -15,7 +15,11 @@ class OperationContext extends RawStarbugContext {
 
   public function setStarbugContainer(ContainerInterface $container) {
     parent::setStarbugContainer($container);
-    $this->db = $container->get("Starbug\Core\DatabaseInterface");
+    if ($container->has("Starbug\Db\DatabaseInterface")) {
+      $this->db = $container->get("Starbug\Db\DatabaseInterface");
+    } else {
+      $this->db = $container->get("Starbug\Core\DatabaseInterface");
+    }
     $this->operations = $container->get("Starbug\Operation\OperationFactoryInterface");
   }
 

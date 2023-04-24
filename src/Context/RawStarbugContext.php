@@ -6,7 +6,6 @@ use Psr\Container\ContainerInterface;
 use Faker\Factory;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Starbug\Core\DatabaseInterface;
 
 class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
   public function __construct() {
@@ -19,7 +18,11 @@ class RawStarbugContext extends RawMinkContext implements StarbugAwareContext {
     $this->mink->pressButton("Login");
   }
   public function setStarbugContainer(ContainerInterface $container) {
-    $this->db = $container->get(DatabaseInterface::class);
+    if ($container->has("Starbug\Db\DatabaseInterface")) {
+      $this->db = $container->get("Starbug\Db\DatabaseInterface");
+    } else {
+      $this->db = $container->get("Starbug\Core\DatabaseInterface");
+    }
     $this->macro = $container->get("Starbug\Core\MacroInterface");
   }
   /**
