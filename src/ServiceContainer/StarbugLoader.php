@@ -17,7 +17,7 @@ class StarbugLoader {
     if (file_exists("vendor/starbug/di/bootstrap/default.php")) {
       include("vendor/starbug/di/bootstrap/default.php");
     } elseif (class_exists("Starbug\Core\ContainerFactory")) {
-      error_reporting(E_ALL & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
+      error_reporting(E_ALL & ~E_STRICT & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED | E_PARSE | E_ERROR);
       $factory = new ContainerFactory($this->basePath);
       $container = $factory->build([]);
       date_default_timezone_set($container->get('time_zone'));
